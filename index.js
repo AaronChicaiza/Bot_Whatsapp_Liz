@@ -63,46 +63,40 @@ Coméntame cómo puedo ayudarte hoy 😊
 
 1️⃣ Necesito un video publicitario para mi negocio
 2️⃣ Necesito un paquete de videos publicitarios para mi negocio
-3️⃣ Necesito conversar personalmente con un asesor para promocionar y hacer crecer mi negocio
-
-O escribe "finalizar" para terminar y hablar con una persona real 📲`;
+3️⃣ Necesito conversar personalmente con un asesor para promocionar y hacer crecer mi negocio`;
                 }
 
                 // OPCIÓN 1
-                else if (estado === "menu" && (texto === "1" || texto.includes("video"))) {
+                else if (estado === "menu" && texto === "1") {
                     usuarios[from].estado = "opcion1_paso1";
                     respuesta =
 `Cuéntame un poquito de tu marca o negocio 🤍
 
 ¿Qué te gustaría impulsar en TikTok o Instagram?
 
-Me encantaría conocerte y ver cómo podemos hacer que más personas descubran lo que haces 🚀
-
-Si ya no deseas seguir con el bot, escribe "finalizar" 📲`;
+Me encantaría conocerte y ver cómo podemos hacer que más personas descubran lo que haces 🚀`;
                 }
 
                 // OPCIÓN 2
-                else if (estado === "menu" && (texto === "2" || texto.includes("paquete"))) {
+                else if (estado === "menu" && texto === "2") {
                     usuarios[from].estado = "opcion2_paso1";
                     respuesta =
 `Cuéntame un poquito de tu marca o negocio 🤍
 
 ¿Qué te gustaría impulsar en TikTok o Instagram?
 
-Me encantaría conocerte y ver cómo podemos hacer que más personas descubran lo que haces 🚀
-
-Si ya no deseas seguir con el bot, escribe "finalizar" 📲`;
+Me encantaría conocerte y ver cómo podemos hacer que más personas descubran lo que haces 🚀`;
                 }
 
                 // OPCIÓN 3
-                else if (estado === "menu" && (texto === "3" || texto.includes("asesor"))) {
+                else if (estado === "menu" && texto === "3") {
                     usuarios[from].estado = "finalizado";
                     respuesta =
 `¡Increíble! 🙌🏼
 
 En pocos minutos un asesor se pondrá en contacto contigo 💖
 
-Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
+Escribe "finalizar" para terminar y te atenderá directamente una persona real 📲`;
                 }
 
                 // RESPUESTA PASO 1 OPCIÓN 1
@@ -121,11 +115,10 @@ Para poder recomendarte la mejor estrategia, cuéntame un poquito más 👀👇
 • ¿Qué te gustaría lograr con la publicidad?
 • ¿Te interesa TikTok, Instagram o ambas plataformas?
 
-Cuando termines de contarme, escribe "listo" para cerrar 🤍
-O escribe "finalizar" para hablar con una persona real 📲`;
+Cuando termines de contarme, escribe "listo" para cerrar 🤍`;
                 }
 
-                // RESPUESTA OPCIÓN 1 PASO 2
+                // RESPUESTA OPCIÓN 1 PASO 2 (último paso)
                 else if (estado === "opcion1_paso2") {
                     if (texto === "listo" || texto === "terminar") {
                         usuarios[from].estado = "finalizado";
@@ -138,15 +131,15 @@ En un momento te voy a compartir toda la información sobre paquetes, métricas 
 
 Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀
 
-Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
+Escribe "finalizar" para terminar y te atenderá directamente una persona real 📲`;
                     } else {
                         if (!usuarios[from].detalles) usuarios[from].detalles = [];
                         usuarios[from].detalles.push(texto);
-                        respuesta = `Perfecto, anotado 🤍. ¿Quieres agregar algo más? Si ya terminaste, escribe "listo". O escribe "finalizar" para hablar con una persona real 📲`;
+                        respuesta = `Perfecto, anotado 🤍. ¿Quieres agregar algo más? Si ya terminaste, escribe "listo".`;
                     }
                 }
 
-                // RESPUESTA FINAL OPCIÓN 2
+                // RESPUESTA FINAL OPCIÓN 2 (último paso)
                 else if (estado === "opcion2_paso1") {
                     usuarios[from].respuesta = texto;
                     usuarios[from].estado = "finalizado";
@@ -159,13 +152,13 @@ En un momento te voy a compartir toda la información sobre paquetes, métricas 
 
 Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀
 
-Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
+Escribe "finalizar" para terminar y te atenderá directamente una persona real 📲`;
                 }
 
                 // CONVERSACIÓN FINALIZADA
                 else if (estado === "finalizado") {
                     if (texto === "finalizar") {
-                        respuesta = `✅ Perfecto, ahora te atenderá directamente una persona real.`;
+                        respuesta = `✅ Perfecto, gracias por su paciencia.`;
                         usuarios[from].estado = "humano"; // ya no responde más
                     } else {
                         respuesta = `💖 La conversación anterior ya terminó. 
@@ -188,9 +181,7 @@ Por favor selecciona una opción escribiendo:
 
 1️⃣ Video publicitario
 2️⃣ Paquete de videos publicitarios
-3️⃣ Hablar con un asesor
-
-O escribe "finalizar" para terminar y hablar con una persona real 📲`;
+3️⃣ Hablar con un asesor`;
                 }
 
                 // ENVIAR MENSAJE WHATSAPP
@@ -222,4 +213,3 @@ O escribe "finalizar" para terminar y hablar con una persona real 📲`;
 app.listen(3000, () => {
     console.log("🚀 Bot funcionando en puerto 3000");
 });
- 
