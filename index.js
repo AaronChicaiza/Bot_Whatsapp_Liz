@@ -53,10 +53,11 @@ app.post("/webhook", async (req, res) => {
 
                 // MENÚ PRINCIPAL (se puede invocar siempre)
                 if (
-                    texto === "hola" ||
-                    texto === "buenas" ||
-                    texto === "info" ||
-                    texto === "información"
+                    texto.includes("hola") ||
+                    texto.includes("holaa") ||
+                    texto.includes("buenas") ||
+                    texto.includes("info") ||
+                    texto.includes("información")
                 ) {
                     usuarios[from].estado = "menu";
                     respuesta =
@@ -164,11 +165,17 @@ Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamen
                 else if (estado === "finalizado") {
                     if (texto === "finalizar") {
                         respuesta = `✅ Perfecto, ahora te atenderá directamente una persona real.`;
-                        // Aquí ya no responde más el bot, podrías incluso borrar el estado si quieres
-                        usuarios[from].estado = "humano";
+                        usuarios[from].estado = "humano"; // ya no responde más
                     } else {
-                        respuesta = `💖 La conversación anterior ya terminó. Si quieres volver a empezar, escribe "hola". O si deseas hablar con una persona real, escribe "finalizar".`;
+                        respuesta = `💖 La conversación anterior ya terminó. 
+Si quieres volver a empezar, escribe "hola". 
+O si deseas hablar con una persona real, escribe "finalizar".`;
                     }
+                }
+
+                // ESTADO HUMANO (no responde)
+                else if (estado === "humano") {
+                    return res.sendStatus(200); // aquí el bot ya no envía nada
                 }
 
                 // MENSAJE NO RECONOCIDO
