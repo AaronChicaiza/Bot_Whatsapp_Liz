@@ -1,0 +1,13 @@
+{
+  "name": "bot-whatsapp-lizkarito",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.16.1",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2"
+  }
+}
