@@ -3,6 +3,7 @@ const axios = require("axios");
 require("dotenv").config();
 
 const app = express();
+
 app.use(express.json());
 
 const TOKEN = process.env.TOKEN;
@@ -99,7 +100,7 @@ Coméntame cómo puedo ayudarte hoy 😊
                 // ===============================
                 // OPCIÓN 1
                 // ===============================
-                else if (texto === "1") {
+                else if (estado === "menu" && texto === "1") {
 
                     usuarios[from].estado = "opcion1_paso1";
 
@@ -113,52 +114,9 @@ Me encantaría conocerte y ver cómo podemos hacer que más personas descubran l
                 }
 
                 // ===============================
-                // RESPUESTA PASO 1 OPCIÓN 1
-                // ===============================
-                else if (estado === "opcion1_paso1") {
-
-                    usuarios[from].info_negocio = texto;
-                    usuarios[from].estado = "opcion1_paso2";
-
-                    respuesta =
-`¡Qué emocionante! 😍
-
-Definitivamente las redes pueden ayudarte muchísimo a atraer más clientes y darle más visibilidad a tu negocio ✨
-
-Para poder recomendarte la mejor estrategia, cuéntame un poquito más 👀👇
-
-• ¿Qué tipo de negocio o emprendimiento tienes?
-• ¿En qué ciudad estás ubicado?
-• ¿Qué te gustaría lograr con la publicidad? (más ventas, más clientes, hacer conocida tu marca, lanzar algo nuevo, etc.)
-• ¿Te interesa TikTok, Instagram o ambas plataformas?
-
-Con eso ya puedo orientarte mucho mejor 🤍`;
-
-                }
-
-                // ===============================
-                // RESPUESTA FINAL OPCIÓN 1
-                // ===============================
-                else if (estado === "opcion1_paso2") {
-
-                    usuarios[from].detalles = texto;
-                    usuarios[from].estado = "finalizado";
-
-                    respuesta =
-`¡Súper! ✨ Gracias por contarme más sobre tu negocio 🤍
-
-Con lo que me comentas, sí veo muchísimo potencial para crear contenido que llame la atención y haga que más personas quieran visitarte/comprarte 👀🔥
-
-En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración de mi Media kit para que podamos armar algo que realmente se adapte a lo que necesitas 💖
-
-Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
-
-                }
-
-                // ===============================
                 // OPCIÓN 2
                 // ===============================
-                else if (texto === "2") {
+                else if (estado === "menu" && texto === "2") {
 
                     usuarios[from].estado = "opcion2_paso1";
 
@@ -172,28 +130,9 @@ Me encantaría conocerte y ver cómo podemos hacer que más personas descubran l
                 }
 
                 // ===============================
-                // RESPUESTA OPCIÓN 2
-                // ===============================
-                else if (estado === "opcion2_paso1") {
-
-                    usuarios[from].respuesta = texto;
-                    usuarios[from].estado = "finalizado";
-
-                    respuesta =
-`¡Súper! ✨ Gracias por contarme más sobre tu negocio 🤍
-
-Con lo que me comentas, sí veo muchísimo potencial para crear contenido que llame la atención y haga que más personas quieran visitarte/comprarte 👀🔥
-
-En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración de mi Media kit para que podamos armar algo que realmente se adapte a lo que necesitas 💖
-
-Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
-
-                }
-
-                // ===============================
                 // OPCIÓN 3
                 // ===============================
-                else if (texto === "3") {
+                else if (estado === "menu" && texto === "3") {
 
                     usuarios[from].estado = "finalizado";
 
@@ -203,6 +142,71 @@ Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
 En pocos minutos un asesor se pondrá en contacto contigo 💖
 
 O si prefieres y necesitas información inmediata puedes llamar sin problema a este número 😊📞📲`;
+
+                }
+
+                // ===============================
+                // RESPUESTA PASO 1 OPCIÓN 1
+                // ===============================
+                else if (estado === "opcion1_paso1") {
+
+                    usuarios[from].info_negocio = texto;
+
+                    usuarios[from].estado = "opcion1_paso2";
+
+                    respuesta =
+`¡Qué emocionante! 😍
+
+Definitivamente las redes pueden ayudarte muchísimo a atraer más clientes y darle más visibilidad a tu negocio ✨
+
+Para poder recomendarte la mejor estrategia, cuéntame un poquito más 👀👇
+
+• ¿Qué tipo de negocio o emprendimiento tienes?
+• ¿En qué ciudad estás ubicado?
+• ¿Qué te gustaría lograr con la publicidad?
+• ¿Te interesa TikTok, Instagram o ambas plataformas?
+
+Con eso ya puedo orientarte mucho mejor 🤍`;
+
+                }
+
+                // ===============================
+                // RESPUESTA FINAL OPCIÓN 1
+                // ===============================
+                else if (estado === "opcion1_paso2") {
+
+                    usuarios[from].detalles = texto;
+
+                    usuarios[from].estado = "finalizado";
+
+                    respuesta =
+`¡Súper! ✨ Gracias por contarme más sobre tu negocio 🤍
+
+Con lo que me comentas, sí veo muchísimo potencial para crear contenido que llame la atención y haga que más personas quieran visitarte/comprarte 👀🔥
+
+En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración 💖
+
+Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
+
+                }
+
+                // ===============================
+                // RESPUESTA FINAL OPCIÓN 2
+                // ===============================
+                else if (estado === "opcion2_paso1") {
+
+                    usuarios[from].respuesta = texto;
+
+                    usuarios[from].estado = "finalizado";
+
+                    respuesta =
+`¡Súper! ✨ Gracias por contarme más sobre tu negocio 🤍
+
+Con lo que me comentas, sí veo muchísimo potencial para crear contenido que llame la atención y haga que más personas quieran visitarte/comprarte 👀🔥
+
+En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración 💖
+
+Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
 
                 }
 
