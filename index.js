@@ -60,10 +60,12 @@ app.post("/webhook", async (req, res) => {
                 const estado = usuarios[from].estado;
 
                 // =====================================
-                // MENÚ PRINCIPAL
+                // REINICIAR CONVERSACIÓN
                 // =====================================
                 if (
                     texto === "hola" ||
+                    texto === "menu" ||
+                    texto === "menú" ||
                     texto === "buenas" ||
                     texto === "información" ||
                     texto === "info"
@@ -98,7 +100,9 @@ Coménteme dónde están ubicados y qué necesitan promocionar.`;
 
                 }
 
+                // =====================================
                 // RESPUESTA UBICACIÓN OPCIÓN 1
+                // =====================================
                 else if (estado === "opcion1_ubicacion") {
 
                     usuarios[from].ubicacion = texto;
@@ -111,7 +115,9 @@ Coménteme dónde están ubicados y qué necesitan promocionar.`;
 
                 }
 
+                // =====================================
                 // RESPUESTA HORARIO OPCIÓN 1
+                // =====================================
                 else if (estado === "opcion1_horario") {
 
                     usuarios[from].horario = texto;
@@ -140,7 +146,9 @@ Coménteme dónde están ubicados y qué necesitan promocionar.`;
 
                 }
 
+                // =====================================
                 // RESPUESTA OPCIÓN 2
+                // =====================================
                 else if (estado === "opcion2_respuesta") {
 
                     usuarios[from].respuesta = texto;
@@ -166,6 +174,15 @@ En breve un asesor continuará con su atención personalizada para brindarle tod
 De inmediato una persona contestará su requerimiento.
 
 Si prefiere también puede comunicarse directamente a este número 📞`;
+
+                }
+
+                // =====================================
+                // SI YA FINALIZÓ → NO RESPONDER MÁS
+                // =====================================
+                else if (estado === "finalizado") {
+
+                    return res.sendStatus(200);
 
                 }
 
