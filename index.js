@@ -175,7 +175,8 @@ Escribe "finalizar" para terminar y te atenderá directamente una persona real �
                 // CONVERSACIÓN FINALIZADA
                 else if (estado === "finalizado") {
                     if (texto === "finalizar") {
-                        respuesta = `✅ Perfecto, gracias por su paciencia.`;
+                        respuesta = `✅ Perfecto, gracias por su paciencia.
+Para ver el menú de opciones nuevamente, escribe la palabra "menu".`;
                         usuarios[from].estado = "humano"; // ya no responde más, salvo "menu"
                     } else {
                         respuesta = `💖 La conversación anterior ya terminó. 
