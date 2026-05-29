@@ -45,6 +45,23 @@ app.post("/webhook", async (req, res) => {
 
                 const estado = usuarios[from].estado;
 
+                // ESTADO HUMANO (ignora todo excepto "menu")
+                if (estado === "humano") {
+                    if (texto === "menu") {
+                        usuarios[from].estado = "menu";
+                        respuesta =
+`✨ ¡Bienvenido de nuevo! 💖
+
+Coméntame cómo puedo ayudarte hoy 😊
+
+1️⃣ Necesito un video publicitario para mi negocio
+2️⃣ Necesito un paquete de videos publicitarios para mi negocio
+3️⃣ Necesito conversar personalmente con un asesor para promocionar y hacer crecer mi negocio`;
+                    } else {
+                        return res.sendStatus(200); // ignora cualquier otra palabra
+                    }
+                }
+
                 // MENÚ PRINCIPAL
                 if (
                     texto.includes("hola") ||
@@ -88,7 +105,7 @@ Me encantaría conocerte y ver cómo podemos hacer que más personas descubran l
 Me encantaría conocerte y ver cómo podemos hacer que más personas descubran lo que haces 🚀`;
                 }
 
-                // OPCIÓN 3
+                // OPCIÓN 3 (último paso)
                 else if (estado === "menu" && texto === "3") {
                     usuarios[from].estado = "finalizado";
                     respuesta =
@@ -159,17 +176,12 @@ Escribe "finalizar" para terminar y te atenderá directamente una persona real �
                 else if (estado === "finalizado") {
                     if (texto === "finalizar") {
                         respuesta = `✅ Perfecto, gracias por su paciencia.`;
-                        usuarios[from].estado = "humano"; // ya no responde más
+                        usuarios[from].estado = "humano"; // ya no responde más, salvo "menu"
                     } else {
                         respuesta = `💖 La conversación anterior ya terminó. 
-Si quieres volver a empezar, escribe "hola". 
+Si quieres volver a empezar, escribe "menu". 
 O si deseas hablar con una persona real, escribe "finalizar".`;
                     }
-                }
-
-                // ESTADO HUMANO (no responde)
-                else if (estado === "humano") {
-                    return res.sendStatus(200);
                 }
 
                 // MENSAJE NO RECONOCIDO
@@ -185,19 +197,21 @@ Por favor selecciona una opción escribiendo:
                 }
 
                 // ENVIAR MENSAJE WHATSAPP
-                await axios({
-                    method: "POST",
-                    url: `https://graph.facebook.com/v19.0/${PHONE_NUMBER_ID}/messages`,
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`,
-                        "Content-Type": "application/json"
-                    },
-                    data: {
-                        messaging_product: "whatsapp",
-                        to: from,
-                        text: { body: respuesta }
-                    }
-                });
+                if (respuesta) {
+                    await axios({
+                        method: "POST",
+                        url: `https://graph.facebook.com/v19.0/${PHONE_NUMBER_ID}/messages`,
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                            "Content-Type": "application/json"
+                        },
+                        data: {
+                            messaging_product: "whatsapp",
+                            to: from,
+                            text: { body: respuesta }
+                        }
+                    });
+                }
             }
         }
         res.sendStatus(200);
