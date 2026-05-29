@@ -63,7 +63,7 @@ Coméntame cómo puedo ayudarte hoy 😊
                 }
 
                 // MENÚ PRINCIPAL
-                if (
+                else if (
                     texto.includes("hola") ||
                     texto.includes("holaa") ||
                     texto.includes("buenas") ||
