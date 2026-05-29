@@ -9,9 +9,6 @@ const TOKEN = process.env.TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
-// ===============================
-// GUARDAR ESTADOS DE USUARIOS
-// ===============================
 const usuarios = {};
 
 // ===============================
@@ -35,16 +32,13 @@ app.get("/webhook", (req, res) => {
 app.post("/webhook", async (req, res) => {
     try {
         const body = req.body;
-
         if (body.entry) {
             const mensaje = body.entry[0].changes[0].value.messages?.[0];
-
             if (mensaje) {
                 const from = mensaje.from;
                 const texto = mensaje.text?.body?.toLowerCase().trim();
                 let respuesta = "";
 
-                // CREAR USUARIO SI NO EXISTE
                 if (!usuarios[from]) {
                     usuarios[from] = { estado: "inicio" };
                 }
@@ -175,7 +169,7 @@ O si deseas hablar con una persona real, escribe "finalizar".`;
 
                 // ESTADO HUMANO (no responde)
                 else if (estado === "humano") {
-                    return res.sendStatus(200); // aquí el bot ya no envía nada
+                    return res.sendStatus(200);
                 }
 
                 // MENSAJE NO RECONOCIDO
@@ -206,7 +200,6 @@ Por favor selecciona una opción escribiendo:
                 });
             }
         }
-
         res.sendStatus(200);
     } catch (error) {
         console.log(error.response?.data || error.message);
