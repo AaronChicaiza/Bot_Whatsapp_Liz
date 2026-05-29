@@ -207,6 +207,15 @@ O si prefieres y necesitas información inmediata puedes llamar sin problema a e
                 }
 
                 // ===============================
+                // CONVERSACIÓN FINALIZADA
+                // ===============================
+                else if (estado === "finalizado") {
+
+                    return res.sendStatus(200);
+
+                }
+
+                // ===============================
                 // MENSAJE NO RECONOCIDO
                 // ===============================
                 else {
