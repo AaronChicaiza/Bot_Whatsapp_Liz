@@ -51,7 +51,7 @@ app.post("/webhook", async (req, res) => {
 
                 const estado = usuarios[from].estado;
 
-                // MENÚ PRINCIPAL
+                // MENÚ PRINCIPAL (se puede invocar siempre)
                 if (
                     texto === "hola" ||
                     texto === "buenas" ||
@@ -101,7 +101,7 @@ Me encantaría conocerte y ver cómo podemos hacer que más personas descubran l
 
 En pocos minutos un asesor se pondrá en contacto contigo 💖
 
-O si prefieres y necesitas información inmediata puedes llamar sin problema a este número 😊📞📲`;
+Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
                 }
 
                 // RESPUESTA PASO 1 OPCIÓN 1
@@ -134,7 +134,9 @@ Con lo que me comentas, sí veo muchísimo potencial para crear contenido que ll
 
 En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración 💖
 
-Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
+Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀
+
+Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
                     } else {
                         if (!usuarios[from].detalles) usuarios[from].detalles = [];
                         usuarios[from].detalles.push(texto);
@@ -153,12 +155,20 @@ Con lo que me comentas, sí veo muchísimo potencial para crear contenido que ll
 
 En un momento te voy a compartir toda la información sobre paquetes, métricas y opciones de colaboración 💖
 
-Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀`;
+Estoy segura de que podemos hacer contenido súper viral para tu marca 🚀
+
+Si ya no deseas seguir con el bot, escribe "finalizar" y te atenderá directamente una persona real 📲`;
                 }
 
                 // CONVERSACIÓN FINALIZADA
                 else if (estado === "finalizado") {
-                    return res.sendStatus(200);
+                    if (texto === "finalizar") {
+                        respuesta = `✅ Perfecto, ahora te atenderá directamente una persona real.`;
+                        // Aquí ya no responde más el bot, podrías incluso borrar el estado si quieres
+                        usuarios[from].estado = "humano";
+                    } else {
+                        respuesta = `💖 La conversación anterior ya terminó. Si quieres volver a empezar, escribe "hola". O si deseas hablar con una persona real, escribe "finalizar".`;
+                    }
                 }
 
                 // MENSAJE NO RECONOCIDO
