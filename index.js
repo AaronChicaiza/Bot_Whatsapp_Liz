@@ -9,7 +9,7 @@ const TOKEN = process.env.TOKEN;
 const PHONE_NUMBER_ID = process.env.PHONE_NUMBER_ID;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
-// Estructura en memoria para controlar los estados de los usuarios
+// Estructura temporal en memoria para controlar los estados
 const usuarios = {};
 
 // ===============================
@@ -37,8 +37,7 @@ app.post("/webhook", async (req, res) => {
 
         const value = body.entry[0].changes[0].value;
 
-        // 🚨 FILTRO 1: Ignorar eventos de "statuses" (Entregado, Leído, Enviado)
-        // Esto evita que cuando el bot o tú desde el celular envíen un mensaje, el webhook cree un bucle infinito.
+        // 🚨 FILTRO 1: Ignorar eventos de "statuses" (Entregado, Leído, Enviado del negocio)
         if (value.statuses) {
             return res.sendStatus(200); 
         }
@@ -48,8 +47,23 @@ app.post("/webhook", async (req, res) => {
         // Procesar solo mensajes de texto entrantes
         if (mensaje && mensaje.type === "text") {
             const from = mensaje.from;
-            const texto = mensaje.text.body.toLowerCase().trim();
-            let respuesta = "";
+            const texto = mensaje.text.body ? mensaje.text.body.toLowerCase().trim() : "";
+            
+            // 🚨 FILTRO 2: Evitar procesar mensajes viejos o bucles por reintentos de Meta
+            const timestampMensaje = parseInt(mensaje.timestamp) * 1000; // Meta lo envía en segundos, JS usa milisegundos
+            const tiempoActual = Date.now();
+            const diferenciaMinutos = (tiempoActual - timestampMensaje) / 1000 / 60;
+
+            // Si el mensaje tiene más de 2 minutos de antigüedad, lo ignoramos de forma segura
+            if (diferenciaMinutos > 2) {
+                console.log(`⚠️ Mensaje de ${from} ignorado: llegó con ${Math.round(diferenciaMinutos)} min de retraso (Reintento de Meta).`);
+                return res.sendStatus(200); 
+            }
+
+            // 🚨 FILTRO 3: Validar que el texto no venga vacío por algún error de payload
+            if (!texto) {
+                return res.sendStatus(200);
+            }
 
             // Inicializar el usuario si escribe por primera vez
             if (!usuarios[from]) {
@@ -58,9 +72,7 @@ app.post("/webhook", async (req, res) => {
 
             const estado = usuarios[from].estado;
 
-            // 🌟 COMANDO SECRETO DESDE TU CELULAR PARA REACTIVAR EL BOT:
-            // Cuando termines de atender manualmente al cliente desde WhatsApp Business, 
-            // puedes escribirle la palabra ".bot" para regresar el chat al asistente virtual.
+            // 🌟 COMANDO SECRETO DESDE EL CELULAR PARA RE-ACTIVAR EL BOT:
             if (texto === ".bot" || texto === "volver al menu") {
                 usuarios[from].estado = "menu";
                 respuesta = `🤖 *Asistente Virtual Reactivado*\n\nEscribe *"hola"* para desplegar el menú de opciones.`;
@@ -71,8 +83,9 @@ app.post("/webhook", async (req, res) => {
             // ==========================================
             // LÓGICA DEL FLUJO DE ESTADOS
             // ==========================================
+            let respuesta = "";
 
-            // ESTADO HUMANO (El bot ignora todo para que chatees libremente desde el celular)
+            // ESTADO HUMANO (El bot se calla por completo para permitir chat manual en WhatsApp Business)
             if (estado === "humano") {
                 if (texto === "menu") {
                     usuarios[from].estado = "menu";
@@ -80,8 +93,7 @@ app.post("/webhook", async (req, res) => {
                     await enviarMensajeWhatsApp(from, respuesta);
                     return res.sendStatus(200);
                 } else {
-                    // Ignora silenciosamente. Estás en control manual desde la app móvil.
-                    return res.sendStatus(200); 
+                    return res.sendStatus(200); // Ignora silenciosamente para no interrumpir al humano
                 }
             }
 
@@ -142,10 +154,10 @@ app.post("/webhook", async (req, res) => {
                 respuesta = obtenerTextoFinalizacion();
             }
 
-            // CONVERSACIÓN FINALIZADA -> PAUSA DEL BOT HACIA AGENTE HUMANO
+            // CONVERSACIÓN FINALIZADA -> TRANSFERENCIA A HUMANO
             else if (estado === "finalizado") {
                 if (texto === "finalizar") {
-                    respuesta = `✅ Perfecto, gracias por su paciencia, en breve un asesor se pondrá en contacto contigo para ayudarte a hacer crecer tu negocio 🚀`;
+                    respuesta = `✅ Perfecto, gracias por su paciencia, en breve un asesor se pondrá en contacto contigo para ayudarte a hacer crecer tu negocio 🚀\n\n*(El asistente se ha pausado de forma segura)*`;
                     usuarios[from].estado = "humano"; // 🚨 Aquí el bot se apaga para este usuario
                 } else {
                     respuesta = `💖 La conversación anterior ya terminó.\n\nPor favor escriba *"finalizar"*.`;
@@ -157,7 +169,7 @@ app.post("/webhook", async (req, res) => {
                 respuesta = `💖 Perdón, no logré entender tu mensaje.\n\nPor favor selecciona una opción escribiendo el número:\n\n1️⃣ Video publicitario\n2️⃣ Paquete de videos publicitarios\n3️⃣ Hablar con un asesor`;
             }
 
-            // ENVIAR LA RESPUESTA CONSTRUIDA
+            // ENVIAR LA RESPUESTA
             if (respuesta) {
                 await enviarMensajeWhatsApp(from, respuesta);
             }
@@ -208,5 +220,5 @@ async function enviarMensajeWhatsApp(to, body) {
 // INICIAR SERVIDOR
 // ===============================
 app.listen(3000, () => {
-    console.log("🚀 Servidor en puerto 3000 con filtros de estabilidad ejecutándose.");
+    console.log("🚀 Servidor corriendo en puerto 3000 con protección de reintentos Meta.");
 });
