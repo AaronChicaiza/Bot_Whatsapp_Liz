@@ -192,7 +192,7 @@ Escribe "finalizar" para terminar y te atenderá directamente una persona real �
                 // CONVERSACIÓN FINALIZADA
                 else if (estado === "finalizado") {
                     if (texto === "finalizar") {
-                        respuesta = `✅ Perfecto, gracias por su paciencia.
+                        respuesta = `✅ Perfecto, gracias por su paciencia, en breve un asesor se pondrá en contacto contigo para ayudarte a hacer crecer tu negocio 🚀
 Para ver el menú de opciones nuevamente, escribe la palabra "menu".`;
                         usuarios[from].estado = "humano"; // ya no responde más, salvo "menu"
                     } else {
