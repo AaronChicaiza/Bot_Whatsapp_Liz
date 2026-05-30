@@ -157,7 +157,7 @@ app.post("/webhook", async (req, res) => {
             // CONVERSACIÓN FINALIZADA -> TRANSFERENCIA A HUMANO
             else if (estado === "finalizado") {
                 if (texto === "finalizar") {
-                    respuesta = `✅ Perfecto, gracias por su paciencia, en breve un asesor se pondrá en contacto contigo para ayudarte a hacer crecer tu negocio 🚀\n\n*(El asistente se ha pausado de forma segura)*`;
+                    respuesta = `✅ Perfecto, gracias por su paciencia, en breve un asesor se pondrá en contacto contigo para ayudarte a hacer crecer tu negocio 🚀`;
                     usuarios[from].estado = "humano"; // 🚨 Aquí el bot se apaga para este usuario
                 } else {
                     respuesta = `💖 La conversación anterior ya terminó.\n\nPor favor escriba *"finalizar"*.`;
