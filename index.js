@@ -197,8 +197,7 @@ Para ver el menú de opciones nuevamente, escribe la palabra "menu".`;
                         usuarios[from].estado = "humano"; // ya no responde más, salvo "menu"
                     } else {
                         respuesta = `💖 La conversación anterior ya terminó. 
-Si quieres volver a empezar, escribe "menu". 
-O si deseas hablar con una persona real, escribe "finalizar".`;
+Por Favor escriba "finalizar".`;
                     }
                 }
 
