@@ -58,6 +58,22 @@ Coméntame cómo puedo ayudarte hoy 😊
 1️⃣ Necesito un video publicitario para mi negocio
 2️⃣ Necesito un paquete de videos publicitarios para mi negocio
 3️⃣ Necesito conversar personalmente con un asesor para promocionar y hacer crecer mi negocio`;
+
+                        // ✅ Enviar respuesta y salir
+                        await axios({
+                            method: "POST",
+                            url: `https://graph.facebook.com/v19.0/${PHONE_NUMBER_ID}/messages`,
+                            headers: {
+                                Authorization: `Bearer ${TOKEN}`,
+                                "Content-Type": "application/json"
+                            },
+                            data: {
+                                messaging_product: "whatsapp",
+                                to: from,
+                                text: { body: respuesta }
+                            }
+                        });
+                        return res.sendStatus(200);
                     } else {
                         return res.sendStatus(200); // ignora cualquier otra palabra
                     }
