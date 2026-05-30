@@ -34,9 +34,10 @@ app.post("/webhook", async (req, res) => {
         const body = req.body;
         if (body.entry) {
             const mensaje = body.entry[0].changes[0].value.messages?.[0];
-            if (mensaje) {
+            // ✅ Solo procesar mensajes de texto
+            if (mensaje && mensaje.type === "text") {
                 const from = mensaje.from;
-                const texto = mensaje.text?.body?.toLowerCase().trim();
+                const texto = mensaje.text.body.toLowerCase().trim();
                 let respuesta = "";
 
                 if (!usuarios[from]) {
